@@ -7,14 +7,58 @@
 # You can add other services your application may depend on here, such as a
 # database or a cache. For examples, see the Awesome Compose repository:
 # https://github.com/docker/awesome-compose
+#services:
+#  server:
+#    build:
+#      context: .
+#    environment:
+#      NODE_ENV: production
+#    ports:
+#      - 8080:8080
+#services:
+#  frontend:
+#    image: docker-polytalko-app
+#    container_name: frontend
+#    ports:
+#      - "80:8080"
+#    restart: unless-stopped
+#    environment:
+#      NODE_ENV: production
+
 services:
-  server:
+  react-prod:
     build:
       context: .
+      dockerfile: Dockerfile
+    image: docker-polytalko-app
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
     environment:
       NODE_ENV: production
+
+  react-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
     ports:
-      - 8080:8080
+      - "5173:5173"
+    develop:
+      watch:
+        - action: sync
+          path: .
+          target: /app
+    volumes:
+      - .:/app
+
+  react-test:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    working_dir: /app
+    command: ["npm", "run", "test"]
+    volumes:
+      - .:/app
 
 # The commented out section below is an example of how to define a PostgreSQL
 # database that your application can use. `depends_on` tells Docker Compose to
