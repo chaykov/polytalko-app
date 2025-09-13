@@ -43,22 +43,19 @@ services:
       dockerfile: Dockerfile.dev
     ports:
       - "5173:5173"
+    environment:
+      NODE_ENV: development
     develop:
       watch:
         - action: sync
           path: .
           target: /app
-    volumes:
-      - .:/app
 
   react-test:
     build:
       context: .
       dockerfile: Dockerfile.dev
-    working_dir: /app
     command: ["npm", "run", "test"]
-    volumes:
-      - .:/app
 
 # The commented out section below is an example of how to define a PostgreSQL
 # database that your application can use. `depends_on` tells Docker Compose to
