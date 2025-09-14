@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: polytalko-app-container
-          image: {DOCKER_USERNAME}/{DOCKERHUB_PROJECT_NAME}:latest
+          image: chaykow/polytalko-app:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
