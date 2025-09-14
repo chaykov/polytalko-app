@@ -4,17 +4,31 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react-swc'
 
 // https://vite.dev/config/
-export default defineConfig({
-  base: "/",
-  plugins: [react()],
-  server: {
-    host: true,
-    port: 5173,
-    strictPort: true,
-  },
-  test: {
-    environment: "jsdom",
-    setupFiles: "./src/setupTests.ts",
-    globals: true,
+export default defineConfig(({ command }) => {
+  if (command === 'serve') {
+    return {
+      base: "/",
+      plugins: [react()],
+      server: {
+        host: true,
+        port: 5173,
+        strictPort: true,
+      },
+
+      test: {
+        environment: "jsdom",
+        setupFiles: "./src/setupTests.ts",
+        globals: true, }
+    };
+  } else {
+    return {
+      base: "/",
+      plugins: [react()],
+      server: {
+        host: true,
+        port: 8080,
+        strictPort: true,
+      },
+    };
   }
 });
