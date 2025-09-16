@@ -51,7 +51,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: Dockerfile.dev
+          file: dev.Dockerfile
           tags: ${{ steps.meta.outputs.REPO_NAME }}-dev:latest
           load: true # Load to local Docker daemon for testing
           cache-from: type=local,src=/tmp/.buildx-cache

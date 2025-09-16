@@ -1,46 +1,22 @@
-# Comments are provided throughout this file to help you get started.
-# If you need more help, visit the Docker Compose reference guide at
-# https://docs.docker.com/go/compose-spec-reference/
-
-# Here the instructions define your application as a service called "server".
-# This service is built from the Dockerfile in the current directory.
-# You can add other services your application may depend on here, such as a
-# database or a cache. For examples, see the Awesome Compose repository:
-# https://github.com/docker/awesome-compose
-#services:
-#  server:
-#    build:
-#      context: .
-#    environment:
-#      NODE_ENV: production
-#    ports:
-#      - 8080:8080
-#services:
-#  frontend:
-#    image: docker-polytalko-app
-#    container_name: frontend
-#    ports:
-#      - "80:8080"
-#    restart: unless-stopped
-#    environment:
-#      NODE_ENV: production
-
 services:
   react-prod:
     build:
       context: .
       dockerfile: Dockerfile
-    image: docker-polytalko-app
+    container_name: polytalko-react-prod
     ports:
       - "8080:8080"
     restart: unless-stopped
     environment:
       NODE_ENV: production
+    networks:
+      - polytalko-network
 
   react-dev:
     build:
       context: .
-      dockerfile: Dockerfile.dev
+      dockerfile: dev.Dockerfile
+    container_name: polytalko-react-dev
     ports:
       - "5173:5173"
     environment:
@@ -48,14 +24,30 @@ services:
     develop:
       watch:
         - action: sync
-          path: .
-          target: /app
+          path: ./src
+          target: /app/src
+        - action: sync
+          path: ./public
+          target: /app/public
+        - action: rebuild
+          path: package.json
+        - action: rebuild
+          path: vite.config.ts
+    networks:
+      - polytalko-network
 
   react-test:
     build:
       context: .
-      dockerfile: Dockerfile.dev
+      dockerfile: dev.Dockerfile
+    container_name: polytalko-react-test
     command: ["npm", "run", "test"]
+    networks:
+      - polytalko-network
+
+networks:
+  polytalko-network:
+    driver: bridge
 
 # The commented out section below is an example of how to define a PostgreSQL
 # database that your application can use. `depends_on` tells Docker Compose to
