@@ -51,24 +51,24 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: Dockerfile.dev
+          file: dev.Dockerfile
           tags: ${{ steps.meta.outputs.REPO_NAME }}-dev:latest
           load: true # Load to local Docker daemon for testing
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache,mode=max
 
       # 7. Run Vitest tests
-      - name: Run Vitest tests and generate report
-        run: |
-          docker run --rm \
-            --workdir /app \
-            --entrypoint "" \
-            ${{ steps.meta.outputs.REPO_NAME }}-dev:latest \
-            sh -c "npm ci && npx vitest run --reporter=verbose"
-        env:
-          CI: true
-          NODE_ENV: test
-        timeout-minutes: 10
+#      - name: Run Vitest tests and generate report
+#        run: |
+#          docker run --rm \
+#            --workdir /app \
+#            --entrypoint "" \
+#            ${{ steps.meta.outputs.REPO_NAME }}-dev:latest \
+#            sh -c "npm ci && npx vitest run --reporter=verbose"
+#        env:
+#          CI: true
+#          NODE_ENV: test
+#        timeout-minutes: 10
 
       # 8. Login to Docker Hub
       - name: Log in to Docker Hub

@@ -1,5 +1,5 @@
 # =========================================
-# Stage 1: Develop the React.js Application
+# Stage 1: Develop the React.js Application in Development
 # =========================================
 ARG NODE_VERSION=22-alpine
 
