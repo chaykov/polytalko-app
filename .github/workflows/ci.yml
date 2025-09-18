@@ -1,0 +1,53 @@
+name: CI – PolyTalko Frontend
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-test:
+    name: Build, Dev Server & Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout code
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          cache: "npm"
+
+      # 3. Install dependencies
+      - name: Install dependencies
+        run: npm ci
+
+      # 4. Build frontend (prod)
+      - name: Build frontend
+        run: npm run build
+
+      # 5. Run dev server briefly to check startup
+      - name: Check dev server startup
+        run: |
+          npm run dev &
+          DEV_PID=$!
+          # wait a few seconds for server to start
+          sleep 5
+          # check if server is listening on default port 5173
+          if ! nc -z localhost 5173; then
+            echo "Dev server failed to start"
+            kill $DEV_PID
+            exit 1
+          fi
+          kill $DEV_PID
+
+      # 6. Run Vitest tests
+      - name: Run unit tests
+        run: npm run test
+        env:
+          CI: true
